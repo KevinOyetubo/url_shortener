@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/url_shortener/css/base.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <main>
+        <div class="header">
+            <h1>Lola URL Shortener</h1>
+        </div>
+        <div class="form">
+            <form method="post">
+                <div class="input-label">
+                    <label for="original_url">Long URL:</label><br>
+                    <input type="text" id="original_url" name="original_url" placeholder="Enter URL" required>
+                </div>
+                <div class="input-label">
+                    <label for="customize_url">Customize (Optional):</label><br>
+                    <input type="text" id="customize_url" name="custom_url" placeholder="Enter to customize">
+                </div>
+                <button type="submit" class="submit-button">Shorten URL</button>
+            </form>
+            {% if url %}
+            <p>Shortened URL:  <br>
+            <p>{{ key }}</p> <br>
+            <p>Shortened URL Link:  <br>
+            <p><a href="{{ url }}"> {{ url }}</p> </a>
+            <img src="{{ qr_code_path }}" alt="QR Code" width="200px">
+            <a href="{{ qr_code_download_link }}" download="qrcode.png">Download QR Code</a>
+            {% endif %}
+        </div>
+        <article>
+            <button onclick="window.location.href='home'" type="button" class="submit-button">Shorten Another URL</button>
+            <button onclick="window.location.href='analytics'" type="button" class="submit-button">View QR Code and Clicks</button>
+        </article>
+    </main>
+    <footer>
+        <h2>Contact the developer: </h2>
+        <a href="www.linkedin.com/in/kevin-ademola-3372852b3"><img src="https://www.bing.com/th?id=OIP.1R2nLh9Gdbpa75yVbtTFYgHaHY&w=150&h=149&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" width="100px"></a>
+        <a href="https://github.com/KevinOyetubo"><img src="https://www.bing.com/th?id=OIP.fqZ9-PPqcG_cm0k3JfoINQHaEK&w=185&h=104&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="github icon by pixel perfect" width="100px"></a>
+        <a href="https://x.com/DemoralizedDemo?t=SZQCM9ptdh3DgbnE54YIMg&s=09"><img src="https://www.bing.com/th?id=OIP.GvhQyyfMGA49XVPJ_uvG0gHaEK&w=283&h=150&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" width="100px" ></a>
+    </footer>
+
+
+</body>
+</html>
+
+
