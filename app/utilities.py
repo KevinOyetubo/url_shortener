@@ -1,7 +1,7 @@
 from fastapi import status, HTTPException
 from config import get_settings
 from starlette.datastructures import URL
-import models
+import os
 import qrcode
 
 # Functions for errors
@@ -31,7 +31,11 @@ def generate_qrcode(data, short_url):
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white")
 
-    # Save QR code image to file
-    qr_code_path = f"./static/qr_codes/{short_url}.png"
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    qr_code_dir = os.path.join(base_dir, 'static', 'qr_code')
+
+    os.makedirs(qr_code_dir, exist_ok=True)
+
+    qr_code_path = os.path.join(qr_code_dir, f"{short_url}.png")
     qr_img.save(qr_code_path)
     return qr_code_path

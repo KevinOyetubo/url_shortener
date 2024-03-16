@@ -41,19 +41,7 @@ def create_custom_db_url(url_original: str, custom_url: str, db: Session):
     db.commit()
     db.refresh(db_url)
     return db_url
-# def create_custom_db_url(url: CustomURL, db: Session):
-#     if not validators.url(url.original_url):
-#         raise_bad_request("Invalid URL")
-#     from crud import get_url_by_key
-#     if get_url_by_key(url.custom_url, db):
-#         return None
-#     short_url = URL(key = url.custom_url, original_url = url.original_url)
-#     qr_code_path = generate_qrcode(short_url.original_url, short_url.key)
-#     db_url = URL(key = short_url.key, original_url = short_url.original_url, qr_code_path = qr_code_path)
-#     db.add(db_url)
-#     db.commit()
-#     db.refresh(db_url)
-#     return db_url
+
 
 
 
