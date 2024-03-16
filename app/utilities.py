@@ -31,6 +31,6 @@ def generate_qrcode(data, short_url):
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white")
 
-    qr_code_path = f"app/static/qr_codes/{short_url}.png"
+    qr_code_path = f"https://github.com/KevinOyetubo/url_shortener/tree/main/app/static/qr_codes{short_url}.png"
     qr_img.save(qr_code_path)
     return qr_code_path
