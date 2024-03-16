@@ -20,7 +20,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # #FRONTEND 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse(".html", {"request": request})
 
 @app.get("/analytics", response_class=HTMLResponse)
 def analytics(request: Request):
@@ -39,7 +39,7 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
         url = get_info(db_url).url
         qr_code_path = db_url.qr_code_path
         qr_code_download_link = f"/static/qr_codes/{db_url.key}.png"
-        return templates.TemplateResponse("home.html", {"request": request, "url": url, "key": db_url.key, 
+        return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
                                                         "qr_code_path": qr_code_path, "qr_code_download_link": qr_code_download_link})
                                                                   
     else:
@@ -49,7 +49,7 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
         url = get_info(db_url).url
         qr_code_path = db_url.qr_code_path
         qr_code_download_link = f"/static/qr_codes/{db_url.key}.png"
-        return templates.TemplateResponse("home.html", {"request": request, "url": url, "key": db_url.key, 
+        return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
                                                         "qr_code_path": qr_code_path, "qr_code_download_link": qr_code_download_link})
 
 
