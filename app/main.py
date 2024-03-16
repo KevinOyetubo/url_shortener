@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
  
 # #FRONTEND 
-@app.get("/home", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
@@ -30,7 +30,7 @@ def analytics(request: Request):
 def delete(request: Request):
     return templates.TemplateResponse("delete.html", {"request": request})
 
-@app.post("/home", response_class=HTMLResponse)
+@app.post("/", response_class=HTMLResponse)
 async def create_url(request: Request, original_url:str = Form(...), custom_url:str = Form(None), db: Session = Depends(get_db)):
     if custom_url:
         db_url = create_custom_db_url(original_url, custom_url, db)
