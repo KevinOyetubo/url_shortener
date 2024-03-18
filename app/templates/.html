@@ -28,8 +28,8 @@
             <p>{{ key }}</p> <br>
             <p>Shortened URL Link:  <br>
             <p><a href="{{ url }}"> {{ url }}</p> </a>
-            <img src="{{ qr_code_path }}" alt="QR Code" width="200px">
-            <a href="{{ qr_code_download_link }}" download="qrcode.png">Download QR Code</a>
+            <img src="data:image/png;base64,{{ qr_code_str }}" alt="QR Code" width="200px">
+            <a href="data:image/png;base64,{{ qr_code_str }}" download="qr_code.png">Download QR Code</a>
             {% endif %}
         </div>
         <article>

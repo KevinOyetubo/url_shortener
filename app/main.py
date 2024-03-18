@@ -3,10 +3,12 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+import base64
+from io import BytesIO
 
 from models import Base
 from database import get_db, engine
-from utilities import get_info
+from utilities import get_info, generate_qrcode
 from crud import get_url_by_key, create_db_url, create_custom_db_url, update_clicks, deactiavte_url
 
 Base.metadata.create_all(bind=engine)
@@ -26,9 +28,6 @@ def home(request: Request):
 def analytics(request: Request):
     return templates.TemplateResponse("analytics.html", {"request": request})
 
-@app.get("/delete", response_class=HTMLResponse)
-def delete(request: Request):
-    return templates.TemplateResponse("delete.html", {"request": request})
 
 @app.post("/", response_class=HTMLResponse)
 async def create_url(request: Request, original_url:str = Form(...), custom_url:str = Form(None), db: Session = Depends(get_db)):
@@ -37,44 +36,40 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
         if db_url == None:
             return templates.TemplateResponse("error.html", context= {"request": request})
         url = get_info(db_url).url
-        qr_code_path = db_url.qr_code_path
-        qr_code_download_link = f"/static/qr_codes/{db_url.key}.png"
+        qr_img = generate_qrcode(db_url.original_url)
+        buffer = BytesIO()
+        qr_img.save(buffer, format="PNG")
+        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
         return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
-                                                        "qr_code_path": qr_code_path, "qr_code_download_link": qr_code_download_link})
+                                                        "qr_img_str": qr_img_str})
                                                                   
     else:
         db_url = create_db_url(original_url=original_url, db=db)
         if db_url == None:
             return templates.TemplateResponse("invalid_error.html", context= {"request": request})
         url = get_info(db_url).url
-        qr_code_path = db_url.qr_code_path
-        qr_code_download_link = f"/static/qr_codes/{db_url.key}.png"
+        qr_img = generate_qrcode(db_url.original_url)
+        buffer = BytesIO()
+        qr_img.save(buffer, format="PNG")
+        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
         return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
-                                                        "qr_code_path": qr_code_path, "qr_code_download_link": qr_code_download_link})
+                                                        "qr_img_str": qr_img_str})
 
 
 @app.post("/analytics", response_class=HTMLResponse)
 async def get_analytics(request: Request, url_key: str = Form(...), db: Session = Depends(get_db)):
     url = get_url_by_key(url_key, db)
     if url != None:
-        qr_code_path = url.qr_code_path
-        qr_code_download_link = f"/static/qr_codes/{url.key}.png"
+        qr_img = generate_qrcode(url.original_url)
+        buffer = BytesIO()
+        qr_img.save(buffer, format="PNG")
+        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
         return templates.TemplateResponse("analytics.html", context= {"request": request, 
                                                              "original_url": url.original_url,
                                                              "clicks": url.clicks,
-                                                             "qr_code_path": qr_code_path,
-                                                             "qr_code_download_link": qr_code_download_link})
+                                                             "qr_img_str": qr_img_str})
     if url == None:
         return templates.TemplateResponse("invalid_error.html", {"request": request})
-
-@app.post("/delete", response_class=HTMLResponse)
-def delete_url(request: Request, url_key: str = Form(...), db: Session = Depends(get_db)):
-    url= deactiavte_url(url_key, db)
-    if url == None:
-        return templates.TemplateResponse("invalid_error.html", {"request": request})
-    else:
-        deleted = True
-        return templates.TemplateResponse("delete.html", {"request": request, "deleted": deleted})
 
 @app.get("/error", response_class=HTMLResponse)
 def error(request: Request):

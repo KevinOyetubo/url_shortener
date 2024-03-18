@@ -10,5 +10,4 @@ class URL(Base):
     key = Column(String, unique=True)
     original_url = Column(String)
     is_active = Column(Boolean, server_default=sa.literal(True))
-    qr_code_path = Column(String)
     clicks = Column(Integer, server_default=sa.literal(0))

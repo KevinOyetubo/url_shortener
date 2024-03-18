@@ -21,8 +21,7 @@ def create_db_url(original_url: str, db: Session):
     if not validators.url(original_url):
         return None
     short_url = URL(key = generate_unique_key(db=db), original_url = original_url)
-    qr_code_path = generate_qrcode(short_url.original_url, short_url.key)
-    db_url = URL(key = short_url.key, original_url = short_url.original_url, qr_code_path = qr_code_path)
+    db_url = URL(key = short_url.key, original_url = short_url.original_url)
     db.add(db_url)
     db.commit()
     db.refresh(db_url)
@@ -35,13 +34,11 @@ def create_custom_db_url(url_original: str, custom_url: str, db: Session):
     if get_url_by_key(custom_url, db):
         return None
     short_url = URL(key = custom_url, original_url = url_original)
-    qr_code_path = generate_qrcode(short_url.original_url, short_url.key)
-    db_url = URL(key = short_url.key, original_url = short_url.original_url, qr_code_path = qr_code_path)
+    db_url = URL(key = short_url.key, original_url = short_url.original_url)
     db.add(db_url)
     db.commit()
     db.refresh(db_url)
     return db_url
-
 
 
 
