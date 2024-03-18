@@ -34,7 +34,7 @@ def generate_qrcode(data):
     qr_img = qr.make_image(fill_color="black", back_color="white")
     
     qr_img_buffer = BytesIO()
-    qr_img.save(qr_img_buffer, format="PNG")
+    qr_img.save(qr_img_buffer)
     qr_img_buffer.seek(0)
     qr_img_base64 = base64.b64encode(qr_img_buffer.getvalue()).decode()
     
