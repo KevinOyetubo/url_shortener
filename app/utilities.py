@@ -3,6 +3,8 @@ from config import get_settings
 from starlette.datastructures import URL
 import models
 import qrcode
+import base64
+from io import BytesIO
 
 # Functions for errors
 def raise_bad_request(message):
@@ -30,5 +32,10 @@ def generate_qrcode(data):
     qr.add_data(data)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white")
-
-    return qr_img
+    
+    qr_img_buffer = BytesIO()
+    qr_img.save(qr_img_buffer, format="PNG")
+    qr_img_buffer.seek(0)
+    qr_img_base64 = base64.b64encode(qr_img_buffer.getvalue()).decode()
+    
+    return qr_img_base64

@@ -3,8 +3,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-import base64
-from io import BytesIO
+
 
 from models import Base
 from database import get_db, engine
@@ -36,10 +35,7 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
         if db_url == None:
             return templates.TemplateResponse("error.html", context= {"request": request})
         url = get_info(db_url).url
-        qr_img = generate_qrcode(db_url.original_url)
-        buffer = BytesIO()
-        qr_img.save(buffer, format="PNG")
-        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
+        qr_img_str = generate_qrcode(db_url.original_url)
         return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
                                                         "qr_img_str": qr_img_str})
                                                                   
@@ -48,10 +44,7 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
         if db_url == None:
             return templates.TemplateResponse("invalid_error.html", context= {"request": request})
         url = get_info(db_url).url
-        qr_img = generate_qrcode(db_url.original_url)
-        buffer = BytesIO()
-        qr_img.save(buffer, format="PNG")
-        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
+        qr_img_str = generate_qrcode(db_url.original_url)
         return templates.TemplateResponse(".html", {"request": request, "url": url, "key": db_url.key, 
                                                         "qr_img_str": qr_img_str})
 
@@ -60,10 +53,7 @@ async def create_url(request: Request, original_url:str = Form(...), custom_url:
 async def get_analytics(request: Request, url_key: str = Form(...), db: Session = Depends(get_db)):
     url = get_url_by_key(url_key, db)
     if url != None:
-        qr_img = generate_qrcode(url.original_url)
-        buffer = BytesIO()
-        qr_img.save(buffer, format="PNG")
-        qr_img_str = base64.b64encode(buffer.getvalue()).decode()
+        qr_img_str = generate_qrcode(url.original_url)
         return templates.TemplateResponse("analytics.html", context= {"request": request, 
                                                              "original_url": url.original_url,
                                                              "clicks": url.clicks,
