@@ -20,7 +20,7 @@ def get_info(db_url):
     db_url.url = str(base_url.replace(path=db_url.key))
     return db_url
 
-def generate_qrcode(data, short_url):
+def generate_qrcode(data):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
